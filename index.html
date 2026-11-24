@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PokeSurvivor — Fan game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">✦</span><span>POKE<span class="accent">SURVIVOR</span></span><small>FAN PROJECT</small></div>
+      <div class="top-stats"><span>◈ <b id="coins">0</b></span><span>DEX <b id="dexCount">0</b>/966</span></div>
+    </header>
+
+    <main>
+      <section id="home" class="screen active">
+        <div class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">UNA AVENTURA ROGUELITE</p>
+            <h1>Sobrevive.<br><span> evoluciona.</span></h1>
+            <p class="muted">Forma tu equipo, consigue movimientos y aguanta las hordas en una arena que no deja de crecer.</p>
+            <div class="hero-actions">
+              <button class="btn primary" id="startBtn">▶ JUGAR</button>
+              <button class="btn secondary" data-screen="gacha">✦ RECLUTAR</button>
+            </div>
+          </div>
+          <div class="hero-orbit"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="hero-core">✦</div><span class="orbit-label label-a">REGIONES</span><span class="orbit-label label-b">SHINIES</span></div>
+        </div>
+        <div class="menu-grid">
+          <button class="menu-card" data-screen="dex"><span>▦</span><b>POKÉDEX</b><small>Tu colección y shinies</small></button>
+          <button class="menu-card" data-screen="gacha"><span>✧</span><b>RECLUTAMIENTO</b><small>Gacha por región</small></button>
+          <button class="menu-card" data-screen="achievements"><span>♛</span><b>LOGROS</b><small>Récords y desafíos</small></button>
+          <button class="menu-card" data-screen="settings"><span>⚙</span><b>AJUSTES</b><small>Audio y controles</small></button>
+        </div>
+        <div class="home-footer"><span>BUILD 0.1.0 · LOCAL</span><span>Tu progreso se guarda automáticamente</span></div>
+      </section>
+
+      <section id="game" class="screen game-screen">
+        <div class="game-wrap">
+          <canvas id="arena" width="960" height="600" aria-label="Arena de juego"></canvas>
+          <div class="hud">
+            <div class="hud-left"><div class="hud-pill"><small>TIEMPO</small><b id="timer">00:00</b></div><div class="hud-pill"><small>NIVEL</small><b id="level">1</b></div><div class="hud-pill"><small>BAJAS</small><b id="kills">0</b></div></div>
+            <div class="hud-right"><button class="icon-btn" id="pauseBtn" title="Pausa">Ⅱ</button></div>
+          </div>
+          <div class="xp-wrap"><div class="xp-label"><span>EXP</span><span id="xpText">0 / 8</span></div><div class="xp-track"><div id="xpFill"></div></div></div>
+          <div class="game-hint" id="gameHint">WASD / FLECHAS · MÓVIL: arrastra para moverte</div>
+        </div>
+      </section>
+
+      <section id="gacha" class="screen">
+        <div class="section-head"><div><p class="eyebrow">AMPLÍA TU EQUIPO</p><h2>Reclutamiento</h2><p class="muted">Cada región tiene su propio conjunto de especies.</p></div><button class="btn ghost" data-screen="home">← VOLVER</button></div>
+        <div class="gacha-panel">
+          <div class="region-art"><div class="region-symbol">✦</div><span>PORTAL REGIONAL</span></div>
+          <div class="gacha-controls"><label for="regionSelect">REGIÓN</label><select id="regionSelect"><option value="Kanto">Kanto</option><option value="Johto">Johto</option><option value="Hoenn">Hoenn</option><option value="Sinnoh">Sinnoh</option><option value="Teselia">Teselia</option><option value="Kalos">Kalos</option><option value="Alola">Alola</option><option value="Galar">Galar</option><option value="Paldea">Paldea</option></select>
+          <div class="rate-row"><span>Probabilidad shiny</span><b id="shinyRate">1 / 128</b></div><button class="btn primary wide" id="pullBtn">✧ RECLUTAR · 100 ◈</button><p class="tiny muted">El reclutamiento es una tirada aleatoria de la región elegida. Las especies conseguidas quedan guardadas.</p></div>
+        </div>
+        <div id="pullResult" class="pull-result hidden"></div>
+      </section>
+
+      <section id="dex" class="screen">
+        <div class="section-head"><div><p class="eyebrow">REGISTRO DE ESPECIES</p><h2>Pokédex</h2><p class="muted">Colección normal y registro shiny independiente.</p></div><button class="btn ghost" data-screen="home">← VOLVER</button></div>
+        <div class="dex-toolbar"><input id="dexSearch" placeholder="Buscar por número o nombre…"><select id="dexFilter"><option value="all">Todas</option><option value="owned">Obtenidas</option><option value="shiny">Shinies</option></select><span id="dexSummary">0 especies</span></div>
+        <div id="dexGrid" class="dex-grid"></div>
+      </section>
+
+      <section id="achievements" class="screen">
+        <div class="section-head"><div><p class="eyebrow">OBJETIVOS</p><h2>Logros</h2><p class="muted">Desbloquea hitos mientras sobrevives.</p></div><button class="btn ghost" data-screen="home">← VOLVER</button></div>
+        <div id="achievementList" class="achievement-list"></div>
+      </section>
+
+      <section id="settings" class="screen">
+        <div class="section-head"><div><p class="eyebrow">PERSONALIZACIÓN</p><h2>Ajustes</h2></div><button class="btn ghost" data-screen="home">← VOLVER</button></div>
+        <div class="settings-panel">
+          <label>Volumen general <input id="volume" type="range" min="0" max="1" step=".05"></label>
+          <label class="toggle-row">Sonido <input id="soundToggle" type="checkbox"></label>
+          <label class="toggle-row">Partículas <input id="particlesToggle" type="checkbox"></label>
+          <label>Probabilidad shiny (experimental) <select id="shinySelect"><option value="128">1 / 128</option><option value="256">1 / 256</option><option value="512">1 / 512</option><option value="64">1 / 64</option></select></label>
+          <div class="control-note"><b>Controles</b><p>WASD o flechas para moverte. En móvil, mantén y arrastra en la dirección deseada. Los movimientos se ejecutan automáticamente.</p></div>
+          <button class="btn danger" id="resetBtn">BORRAR PROGRESO LOCAL</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="levelModal" class="modal hidden"><div class="modal-card"><p class="eyebrow">¡HAS SUBIDO DE NIVEL!</p><h2>Elige una mejora</h2><div id="upgradeChoices" class="upgrade-choices"></div></div></div>
+  <div id="pauseModal" class="modal hidden"><div class="modal-card"><p class="eyebrow">PARTIDA EN PAUSA</p><h2>Respira un segundo</h2><button class="btn primary wide" id="resumeBtn">CONTINUAR</button><button class="btn secondary wide" id="quitBtn">SALIR AL MENÚ</button></div></div>
+  <div id="gameOverModal" class="modal hidden"><div class="modal-card"><p class="eyebrow">FIN DE LA PARTIDA</p><h2>La aventura continúa</h2><div id="runSummary" class="run-summary"></div><button class="btn primary wide" id="retryBtn">VOLVER A JUGAR</button><button class="btn secondary wide" id="homeBtn">MENÚ PRINCIPAL</button></div></div>
+  <div id="toast" class="toast"></div>
+  <script src="js/data.js"></script><script src="js/sprites.js"></script><script src="js/game.js"></script><script src="js/app.js"></script>
+</body>
+</html>
